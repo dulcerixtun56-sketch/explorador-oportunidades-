@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorador de oportunidades</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff1f5;
+      color: #333;
+      margin: 0;
+      padding: 25px;
+    }
+    main {
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 { color: #a64d79; }
+    .card {
+      background: white;
+      padding: 18px;
+      margin: 15px 0;
+      border-radius: 12px;
+    }
+    button, input {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+    }
+    button {
+      background: #a64d79;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Explorador de oportunidades</h1>
+    <p>Encuentra oportunidades y guarda tus favoritas.</p>
+
+    <label for="busqueda">Buscar oportunidad</label><br>
+    <input id="busqueda" type="text"
+      placeholder="Ej. becas">
+    <button onclick="buscar()">Buscar</button>
+
+    <p id="mensaje" role="status"></p>
+    <section id="resultados" aria-label="Resultados">
+      <article class="card" data-nombre="Beca estudiantil">
+        <h2>Beca estudiantil</h2>
+        <p>Consulta oportunidades de estudio.</p>
+        <button onclick="guardar()">Guardar oportunidad</button>
+      </article>
+      <article class="card" data-nombre="Curso de tecnología">
+        <h2>Curso de tecnología</h2>
+        <p>Aprende nuevas habilidades digitales.</p>
+        <button onclick="guardar()">Guardar oportunidad</button>
+      </article>
+    </section>
+    <h2>Oportunidades guardadas</h2>
+    <ul id="guardadas"></ul>
+  </main>
+
+  <script>
+    function buscar() {
+      const texto = document.getElementById("busqueda")
+        .value.toLowerCase();
+      const tarjetas = document.querySelectorAll(".card");
+      let encontrados = 0;
+
+      tarjetas.forEach(tarjeta => {
+        const coincide = tarjeta.dataset.nombre
+          .toLowerCase().includes(texto);
+        tarjeta.hidden = !coincide;
+        if (coincide) encontrados++;
+      });
+
+      document.getElementById("mensaje").textContent =
+        encontrados ? "Resultados encontrados: " + encontrados
+        : "No encontramos resultados. Prueba otra búsqueda.";
+    }
+
+    function guardar() {
+      const boton = event.currentTarget;
+      const nombre = boton.closest(".card")
+        .dataset.nombre;
+      const lista = document.getElementById("guardadas");
+
+      if ([...lista.children].some(li => li.textContent === nombre)) {
+        document.getElementById("mensaje").textContent =
+          "Esta oportunidad ya está guardada.";
+        return;
+      }
+
+      const elemento = document.createElement("li");
+      elemento.textContent = nombre;
+      lista.appendChild(elemento);
+      document.getElementById("mensaje").textContent =
+        "¡Oportunidad guardada con éxito!";
+    }
+  </script>
+</body>
+</html>
